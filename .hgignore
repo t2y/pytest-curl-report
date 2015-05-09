@@ -1,0 +1,15 @@
+.*.egg-info
+.cache
+.coverage
+.installed.cfg
+.pyc
+.pyo
+.swp
+.tox
+build
+coverage_html_report
+develop-eggs
+dist
+eggs
+htmlcov
+parts
