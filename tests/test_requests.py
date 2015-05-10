@@ -9,6 +9,8 @@ from pytest_curl_report.utils import RequestsRequest
 
 from data import GET_DATA, GET_DATA_PARAMS
 from data import POST_DATA, POST_DATA_PARAMS
+from data import PUT_DATA, PUT_DATA_PARAMS
+from data import DELETE_DATA, DELETE_DATA_PARAMS
 from utils import assert_curl_response
 
 log = logging.getLogger(__name__)
@@ -43,6 +45,40 @@ def test_requests_post(httpbin, headers, data):
     result = json.loads(r.content.decode('utf-8'))
 
     log.debug('requets.post result:')
+    log.debug(result)
+
+    assert_curl_response(RequestsRequest(r.request), object(), result)
+
+
+@pytest.mark.parametrize(
+    PUT_DATA_PARAMS,
+    PUT_DATA.values(),
+    ids=list(PUT_DATA.keys()),
+)
+def test_requests_put(httpbin, headers, data):
+    url = httpbin.url + '/put'
+    r = requests.put(url, headers=headers, data=data)
+    assert r.status_code == 200
+    result = json.loads(r.content.decode('utf-8'))
+
+    log.debug('requets.put result:')
+    log.debug(result)
+
+    assert_curl_response(RequestsRequest(r.request), object(), result)
+
+
+@pytest.mark.parametrize(
+    DELETE_DATA_PARAMS,
+    DELETE_DATA.values(),
+    ids=list(PUT_DATA.keys()),
+)
+def test_requests_delete(httpbin, headers, data):
+    url = httpbin.url + '/delete'
+    r = requests.delete(url, headers=headers, data=data)
+    assert r.status_code == 200
+    result = json.loads(r.content.decode('utf-8'))
+
+    log.debug('requets.delete result:')
     log.debug(result)
 
     assert_curl_response(RequestsRequest(r.request), object(), result)

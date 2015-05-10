@@ -73,3 +73,31 @@ POST_DATA = {
         json.dumps({'データ': 'テスト', '番号': 1}),
     ),
 }
+
+
+PUT_DATA_PARAMS = ('headers', 'data')
+PUT_DATA = {
+    'with no data': (
+        {'Content-Type': 'application/json'},
+        '',
+    ),
+
+    'with json data and headers': (
+        {'Content-Type': 'application/json'},
+        json.dumps({'data': 'test', 'num': 1}),
+    ),
+
+    'with json data[utf-8 encoded string] and headers': (
+        {'Content-Type': 'application/json'},
+        json.dumps({'データ': 'テスト', '番号': 1}),
+    ),
+
+    'with json data and additional headers': (
+        {'Content-Type': 'application/json', 'X-Debug': '1'},
+        json.dumps({'データ': 'テスト', '番号': 1}),
+    ),
+}
+
+
+DELETE_DATA_PARAMS = PUT_DATA_PARAMS
+DELETE_DATA = PUT_DATA.copy()
