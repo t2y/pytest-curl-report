@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
 
+try:
+    from email.header import Header
+except ImportError:
+    from email.Header import Header
+
 from six.moves.urllib.parse import urlencode
 
 from utils import DummyExtra
@@ -71,6 +76,33 @@ POST_DATA = {
     'with json data[utf-8 encoded string] and headers': (
         {'Content-Type': 'application/json', 'X-Debug': '1'},
         json.dumps({'データ': 'テスト', '番号': 1}),
+    ),
+}
+
+
+POST_DATA_MULTIPART_PARAMS = ('headers', 'data')
+POST_DATA_MULTIPART = {
+    'with multipart/form-data to send form data': (
+        {'Content-Type': 'multipart/form-data'},
+        {'data': (None, 'test'), 'num': (None, '1')},
+    ),
+
+    'with multipart/form-data to send multiple form data': (
+        {'Content-Type': 'multipart/form-data'},
+        {'data': (None, 'test1'), 'data': (None, 'test2')},
+    ),
+
+    'with multipart/form-data to send attachments': (
+        {'Content-Type': 'multipart/form-data'},
+        {'attachment1': ('attach.txt', 'tests/fixtures/attach.txt'),
+         'attachment2': (
+            Header(u'添付.txt').encode(), 'tests/fixtures/添付.txt')},
+    ),
+
+    'with multipart/form-data to send form data and attachment': (
+        {'Content-Type': 'multipart/form-data'},
+        {'data': (None, 'test'),
+         'attachment': ('attach.txt', 'tests/fixtures/attach.txt')},
     ),
 }
 

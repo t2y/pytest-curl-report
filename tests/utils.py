@@ -11,6 +11,7 @@ EXCLUDE_HEADER_KEYS = [
     'Accept',
     'Accept-Encoding',
     'Connection',
+    'Expect',
     'User-Agent',
 ]
 
@@ -33,6 +34,11 @@ def remove_exclude_headers(headers, extra):
         keys = [key for key in headers if key not in header_keys]
         for key in keys:
             headers.pop(key, None)
+
+    content_type = headers.get('Content-Type', '')
+    if content_type.startswith('multipart/form-data'):
+        headers['Content-Type'] = 'multipart/form-data'
+        headers.pop('Content-Length')
 
     log.debug('remove_exclude_headers result:')
     log.debug(headers)

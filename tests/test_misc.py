@@ -8,6 +8,39 @@ from six.moves.urllib.request import Request
 from pytest_curl_report import utils
 
 
+@pytest.mark.parametrize(('data', 'content_type', 'expected'), [
+    (
+        '--bbbcurlreportbbb\r\n'
+        'Content-Disposition: form-data; name="data1"\r\n\r\n'
+        'test1\r\n'
+        '--bbbcurlreportbbb\r\n'
+        'Content-Disposition: form-data; name="data2"\r\n\r\n'
+        'test2\r\n',
+        'multipart/form-data; boundary=bbbcurlreportbbb',
+        {'data1': ['test1'], 'data2': ['test2']},
+    ),
+    (
+        '--bbbcurlreportbbb\r\n'
+        'Content-Disposition: form-data; name="data1"\r\n\r\n'
+        'test1\r\n'
+        '--bbbcurlreportbbb\r\n'
+        'Content-Disposition: form-data; name="data1"\r\n\r\n'
+        'test2\r\n',
+        'multipart/form-data; boundary=bbbcurlreportbbb',
+        {'data1': ['test1', 'test2']},
+    ),
+], ids=[
+    'with basic multipart/form-data',
+    'with multipart/form-data to send multiple data',
+])
+def test_parse_multipart_formdata(data, content_type, expected):
+    encoded = data.encode('utf-8')
+    formdata, _ = utils.parse_multipart_data(encoded, content_type)
+    for key, values in formdata.items():
+        formdata[key] = [value.decode('utf-8') for value in values]
+    assert formdata == expected
+
+
 def test_get_inspect_functions():
     funcs = utils.get_inspect_functions()
     assert len(funcs) == 2
