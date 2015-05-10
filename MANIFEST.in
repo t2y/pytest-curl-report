@@ -1,7 +1,10 @@
-include MANIFEST.in
-include LICENSE
-include *.rst
-include *.ini
 include *.cfg
+include *.ini
+include *.rst
+include LICENSE
+include MANIFEST.in
+recursive-exclude * *.py[co]
+recursive-exclude * __pycache__
 recursive-include pytest_curl_report *.py
 recursive-include tests *.py
+recursive-include tests/fixtures *
