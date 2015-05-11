@@ -10,19 +10,28 @@ PLUGIN_NAMESPACE = 'curl_report'
 
 def pytest_addoption(parser):
     parser.addoption(
-        '--no-curl-report', dest='nocurlreport',
+        '--no-curl-report', dest='no_curl_report',
         action='store_true', default=False,
         help='not generate curl report when a testcase is failed'
+    )
+    parser.addoption(
+        '--curl-report-only', dest='curl_report_only',
+        action='store_true', default=False,
+        help='strip pytest assertion log and generate curl report only'
     )
 
 
 def pytest_runtest_makereport(__multicall__, item, call):
-    if item.config.option.nocurlreport:
+    if item.config.option.no_curl_report:
         return
 
     report = __multicall__.execute()
-    if not report.longrepr:
+    if report.longrepr is None:
         return report
+
+    if item.config.option.curl_report_only:
+        # HACK: set dummy reporting function for traceback report
+        report.longrepr.reprtraceback.toterminal = lambda x: None
 
     extra_info = getattr(pytest, PLUGIN_NAMESPACE, object())
     inspect_funcs = get_inspect_functions()
