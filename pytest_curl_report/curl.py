@@ -84,13 +84,14 @@ class Curl(object):
         return ''
 
     def make_command(self):
-        return self.command_template % {
+        command = self.command_template % {
             'url': self.url,
             'method': self.method,
             'headers': self.get_header_params(),
             'data': self.get_data_params(),
             'proxy': self.get_proxy_params(),
         }
+        return command.replace('  ', ' ')
 
 
 def get_boundary_string(content_type):
