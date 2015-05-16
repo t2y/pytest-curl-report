@@ -54,7 +54,8 @@ GET_DATA = {
 POST_DATA_PARAMS = ('headers', 'data')
 POST_DATA = {
     'with no data': (
-        {'Content-Type': 'application/x-www-form-urlencoded'},
+        {'Content-Length': 0,
+         'Content-Type': 'application/x-www-form-urlencoded'},
         '',
     ),
 
@@ -133,3 +134,21 @@ PUT_DATA = {
 
 DELETE_DATA_PARAMS = PUT_DATA_PARAMS
 DELETE_DATA = PUT_DATA.copy()
+
+
+PROXY_DATA_PARAMS = ('method', 'proxies', 'headers', 'data')
+PROXY_DATA = {
+    'via proxy for get request': (
+        'get',
+        {'http': 'http://127.0.0.1:8888', 'https': 'https://127.0.0.1:8888'},
+        {'Content-Length': 0, 'X-Debug': 1},
+        {},
+    ),
+
+    'via proxy for post request': (
+        'post',
+        {'http': 'http://127.0.0.1:8888', 'https': 'https://127.0.0.1:8888'},
+        {'Content-Type': 'application/json'},
+        json.dumps({'data': 'test', 'num': 1}),
+    ),
+}

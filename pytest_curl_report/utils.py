@@ -1,36 +1,57 @@
 # -*- coding: utf-8 -*-
 import json
+import os
 import re
 
 
-class UrllibRequest(object):
+class BaseRequest(object):
+
+    def get_proxy_settings(self, url):
+        http_proxy = os.environ.get('HTTP_PROXY')
+        https_proxy = os.environ.get('HTTPS_PROXY')
+        if http_proxy and url.startswith('http:'):
+            return http_proxy.replace('http://', '')
+        elif https_proxy and url.startswith('https:'):
+            return https_proxy.replace('https://', '')
+        return None
+
+
+class UrllibRequest(BaseRequest):
 
     def __init__(self, request):
         self.url = request.get_full_url()
         self.method = request.get_method()
+        self.proxy = self.get_proxy_settings(self.url)
         self.headers = request.headers
+
         self.data = ''
         if request.data:
             self.data = request.data.decode('utf-8')
+
         self._request = request
 
 
-class RequestsRequest(object):
+class RequestsRequest(BaseRequest):
 
     def __init__(self, request):
         self.url = request.url
+        self.proxy = self.get_proxy_settings(self.url)
         self.method = request.method
         self.headers = request.headers
+
         if hasattr(request, 'body'):
             self.data = request.body
         else:
             self.data = request.data
+
         self._request = request
 
 
 class Curl(object):
 
     def __init__(self, request, extra):
+        assert isinstance(request, BaseRequest)
+
         self.url = request.url
         self.method = request.method
         self.headers = request.headers
@@ -38,14 +59,16 @@ class Curl(object):
             [(k.lower(), v) for k, v in request.headers.items()]
         )
         self.data = request.data
+        self.proxy = request.proxy
         self.extra = extra
 
     @property
     def command_template(self):
+        base = 'curl -X %(method)s %(proxy)s %(headers)s'
         if self.method == 'GET':
-            return 'curl -X %(method)s %(headers)s "%(url)s"'
+            return base + ' "%(url)s"'
         else:
-            return 'curl -X %(method)s %(headers)s %(data)s "%(url)s"'
+            return base + ' %(data)s "%(url)s"'
 
     def remove_header(self, headers, keys):
         target = [k for k in headers.keys() if k.lower() in keys]
@@ -68,7 +91,7 @@ class Curl(object):
         return ' '.join('-H "%s: %s"' % (k, v) for k, v in headers.items())
 
     def get_data_params(self):
-        if self.method == 'GET':
+        if self.method == 'GET' or not self.data:
             return ''
 
         content_type = self.lower_headers.get('content-type', '')
@@ -97,12 +120,18 @@ class Curl(object):
 
         return '-d "%s"' % self.data
 
+    def get_proxy_params(self):
+        if self.proxy is not None:
+            return '-x %s' % self.proxy
+        return ''
+
     def make_command(self):
         return self.command_template % {
             'url': self.url,
             'method': self.method,
             'headers': self.get_header_params(),
             'data': self.get_data_params(),
+            'proxy': self.get_proxy_params(),
         }
 
 

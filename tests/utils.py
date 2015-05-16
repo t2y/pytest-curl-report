@@ -2,6 +2,9 @@
 import json
 import logging
 import os
+import sys
+import threading
+import time
 from subprocess import Popen, PIPE
 
 from pytest_curl_report.utils import Curl
@@ -12,6 +15,7 @@ EXCLUDE_HEADER_KEYS = [
     'Accept-Encoding',
     'Connection',
     'Expect',
+    'Proxy-Connection',
     'User-Agent',
 ]
 
@@ -42,6 +46,23 @@ def remove_exclude_headers(headers, extra):
 
     log.debug('remove_exclude_headers result:')
     log.debug(headers)
+
+
+_IS_PROXY_STARTED = False
+
+
+def run_proxy_server():
+    import pyproxy
+
+    global _IS_PROXY_STARTED
+    if not _IS_PROXY_STARTED:
+        _IS_PROXY_STARTED = True
+        # HACK: remove sys.argv since tornado in pyproxy uses it
+        sys.argv = []
+        proxy_thread = threading.Thread(target=pyproxy.main)
+        proxy_thread.daemon = True
+        proxy_thread.start()
+        time.sleep(1)
 
 
 def assert_curl_response(request, extra, expected):

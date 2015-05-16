@@ -48,6 +48,7 @@ setup(
     entry_points={'pytest11': ['curl-report = pytest_curl_report.plugin']},
     install_requires=['pytest>=2.4'],
     tests_require=[
+        'pyproxy',
         'pytest',
         'pytest-capturelog',
         'pytest-flakes',

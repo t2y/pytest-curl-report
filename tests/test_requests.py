@@ -14,7 +14,8 @@ from data import POST_DATA, POST_DATA_PARAMS
 from data import POST_DATA_MULTIPART, POST_DATA_MULTIPART_PARAMS
 from data import PUT_DATA, PUT_DATA_PARAMS
 from data import DELETE_DATA, DELETE_DATA_PARAMS
-from utils import assert_curl_response
+from data import PROXY_DATA, PROXY_DATA_PARAMS
+from utils import assert_curl_response, run_proxy_server
 
 log = logging.getLogger(__name__)
 
@@ -129,3 +130,27 @@ def test_requests_delete(httpbin, headers, data):
     log.debug(result)
 
     assert_curl_response(RequestsRequest(r.request), object(), result)
+
+
+@pytest.mark.parametrize(
+    PROXY_DATA_PARAMS,
+    PROXY_DATA.values(),
+    ids=list(PROXY_DATA.keys()),
+)
+def test_requests_http_proxy(httpbin, method, proxies, headers, data):
+    run_proxy_server()
+    url = httpbin.url + '/' + method
+
+    http_proxy = proxies.get('http')
+    os.environ['HTTP_PROXY'] = http_proxy
+    r = requests.request(method, url, headers=headers, data=data)
+    req = RequestsRequest(r.request)
+    del os.environ['HTTP_PROXY']
+
+    assert r.status_code == 200
+    result = json.loads(r.content.decode('utf-8'))
+
+    log.debug('requets.%s via %s result:' % (method, http_proxy))
+    log.debug(result)
+
+    assert_curl_response(req, object(), result)
