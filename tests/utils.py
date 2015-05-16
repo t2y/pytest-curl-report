@@ -69,7 +69,8 @@ def assert_curl_response(request, extra, expected):
     cmd = Curl(request, extra).make_command()
 
     with open(os.devnull, 'w') as devnull:
-        p = Popen(cmd, stdout=PIPE, stderr=devnull, shell=True)
+        p = Popen(cmd, stdout=PIPE, stderr=devnull,
+                  executable='/bin/bash', shell=True)
         stdout, _ = p.communicate()
         actual = json.loads(stdout.decode('utf-8'))
 
