@@ -7,7 +7,7 @@ import threading
 import time
 from subprocess import Popen, PIPE
 
-from pytest_curl_report.utils import Curl
+from pytest_curl_report.curl import Curl
 
 
 EXCLUDE_HEADER_KEYS = [

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from .utils import Curl
+from .curl import Curl
 from .utils import get_inspect_functions
 
 

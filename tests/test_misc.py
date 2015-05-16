@@ -5,6 +5,7 @@ from requests.models import Response
 from requests.models import Request as ReqRequest, PreparedRequest
 from six.moves.urllib.request import Request
 
+from pytest_curl_report import curl
 from pytest_curl_report import utils
 
 
@@ -35,7 +36,7 @@ from pytest_curl_report import utils
 ])
 def test_parse_multipart_formdata(data, content_type, expected):
     encoded = data.encode('utf-8')
-    formdata, _ = utils.parse_multipart_data(encoded, content_type)
+    formdata, _ = curl.parse_multipart_data(encoded, content_type)
     for key, values in formdata.items():
         formdata[key] = [value.decode('utf-8') for value in values]
     assert formdata == expected
