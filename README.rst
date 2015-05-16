@@ -13,7 +13,7 @@ Features
 --------
 
 * Provide additional cURL report if a testcase includes http request would fail
-* Support urllib/urllib2 and requests as a http request object
+* Support urllib/urllib2 and `requests`_ as a http request object
 * Support cURL command line below options
 
   * method
@@ -22,6 +22,7 @@ Features
   * form data
   * attachment file
 
+.. _requests: http://docs.python-requests.org/
 
 Installation
 ============
@@ -39,7 +40,7 @@ the test.
 
 ::
 
-    $ vi test:
+    $ vi test.py
     # -*- coding: utf-8 -*-
     import requests
 
@@ -97,11 +98,17 @@ There are several options.
                             only
     ...
 
-`--curl-report-only` is useful if you want to confirm cURL commands only.
+*--curl-report-only* is useful if you want to confirm cURL commands only.
 For example, you prefer test first concept and use the cli for interactive
 development.
 
 ::
+
+    $ vi test.py
+    ...
+    def test_requests_post():
+        r = requests.post('https://httpbin.org/post', data={"test": "example"})
+        assert False
 
     $ py.test --curl-report-only test.py 
     =================================== FAILURES ===================================
@@ -134,5 +141,5 @@ Add some code into conftest.py, then restrict headers you need.
     curl -X POST -H "Content-Type: application/x-www-form-urlencoded"
     -d "test=example" "https://httpbin.org/post"
 
-In this case, only `Content-Type` header is generated.
+In this case, only *Content-Type* header is generated.
 
