@@ -12,7 +12,7 @@ Requirements
 Features
 --------
 
-* Provide additional cURL report if a testcase includes http request would fail
+* Provide additional `cURL`_ report if a testcase includes http request would fail
 * Support urllib/urllib2 and `requests`_ as a http request object
 * Support cURL command line below options
 
@@ -22,7 +22,9 @@ Features
   * form data
   * attachment file
 
+.. _cURL: http://curl.haxx.se/
 .. _requests: http://docs.python-requests.org/
+
 
 Installation
 ============
