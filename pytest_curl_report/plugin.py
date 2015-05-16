@@ -9,12 +9,13 @@ PLUGIN_NAMESPACE = 'curl_report'
 
 
 def pytest_addoption(parser):
-    parser.addoption(
+    group = parser.getgroup('curlreport', 'curl report')
+    group.addoption(
         '--no-curl-report', dest='no_curl_report',
         action='store_true', default=False,
         help='not generate curl report when a testcase is failed'
     )
-    parser.addoption(
+    group.addoption(
         '--curl-report-only', dest='curl_report_only',
         action='store_true', default=False,
         help='strip pytest assertion log and generate curl report only'
