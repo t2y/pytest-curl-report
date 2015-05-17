@@ -158,7 +158,7 @@ even if you give the settings with another way.
     $ vi test.py
     def test_requests_proxy_post():
         import os
-        os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:8888'
+        os.environ['HTTPS_PROXY'] = 'https://127.0.0.1:8888'
         r = requests.post('https://httpbin.org/post', data={"test": "example"})
         assert False
 
