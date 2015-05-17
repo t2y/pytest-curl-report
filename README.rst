@@ -165,7 +165,7 @@ even if you give the settings with another way.
     $ py.test test.py
     ...
     -------------------------- How to reproduce with curl --------------------------
-    curl -X POST -x http://127.0.0.1:8888
+    curl -X POST -x https://127.0.0.1:8888
     -H "Content-Type: application/x-www-form-urlencoded" -d "test=example"
     "https://httpbin.org/post"
 
