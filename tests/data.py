@@ -6,6 +6,7 @@ try:
 except ImportError:
     from email.Header import Header
 
+import pytest
 from six.moves.urllib.parse import urlencode
 
 from utils import DummyExtra
@@ -93,12 +94,13 @@ POST_DATA_MULTIPART = {
         {'data': (None, 'test1'), 'data': (None, 'test2')},
     ),
 
-    'with multipart/form-data to send attachments': (
+    'with multipart/form-data to send attachments':
+    pytest.mark.skipif('os.environ.get("DRONE")')((
         {'Content-Type': 'multipart/form-data'},
         {'attachment1': ('attach.txt', 'tests/fixtures/attach.txt'),
          'attachment2': (
             Header(u'添付.txt').encode(), 'tests/fixtures/添付.txt')},
-    ),
+    )),
 
     'with multipart/form-data to send form data and attachment': (
         {'Content-Type': 'multipart/form-data'},
