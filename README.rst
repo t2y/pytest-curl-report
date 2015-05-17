@@ -81,8 +81,8 @@ request to the web server. Copy the cURL command and paste it on terminal,
 then you can run the command immediately. It might be useful to tell the
 developers how to reproduce an issue when the test was failed.
 
-The cURL report would be generated automatically, so you don't have to configure
-some settings or use particular snippet.
+The cURL report would be generated from *Request* object in test code,
+so you don't have to configure some settings or use particular snippet.
 
 
 Usage
@@ -144,4 +144,28 @@ Add some code into conftest.py, then restrict headers you need.
     -d "test=example" "https://httpbin.org/post"
 
 In this case, only *Content-Type* header is generated.
+
+Proxy Settings
+--------------
+
+Unfortunately, it seems *Request* object doesn't keep proxy settings.
+Proxy settings are retrieved from environment variable on platform.
+So add environment variable to detect the settings by plugin,
+even if you give the settings with another way.
+
+::
+
+    $ vi test.py
+    def test_requests_proxy_post():
+        import os
+        os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:8888'
+        r = requests.post('https://httpbin.org/post', data={"test": "example"})
+        assert False
+
+    $ py.test test.py
+    ...
+    -------------------------- How to reproduce with curl --------------------------
+    curl -X POST -x http://127.0.0.1:8888
+    -H "Content-Type: application/x-www-form-urlencoded" -d "test=example"
+    "https://httpbin.org/post"
 
