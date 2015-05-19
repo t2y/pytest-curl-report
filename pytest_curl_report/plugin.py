@@ -31,8 +31,10 @@ def pytest_runtest_makereport(__multicall__, item, call):
         return report
 
     if item.config.option.curl_report_only:
-        # HACK: set dummy reporting function for traceback report
-        report.longrepr.reprtraceback.toterminal = lambda x: None
+        if hasattr(report, 'longer'):
+            if hasattr(report.longrepr, 'reprtraceback'):
+                # HACK: set dummy reporting function for traceback report
+                report.longrepr.reprtraceback.toterminal = lambda x: None
 
     extra_info = getattr(pytest, PLUGIN_NAMESPACE, object())
     inspect_funcs = get_inspect_functions()
