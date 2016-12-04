@@ -118,7 +118,7 @@ def parse_multipart_data(data, content_type):
     formdata = parse_multipart(BytesIO(data), boundary)
 
     filenames = []
-    _filenames = re.findall(_RE_FILENAME, data.decode('utf-8'))
+    _filenames = re.findall(_RE_FILENAME, data)
     if _filenames:
         for name, raw_fname in _filenames:
             fname, charset = decode_header(raw_fname)[0]
