@@ -41,7 +41,7 @@ setup(
     ],
     keywords=['test', 'pytest', 'curl'],
     author='Tetsuya Morimoto',
-    author_email='tetsuya dot morimoto at gmail dot com',
+    author_email='tetsuya.morimoto@gmail.com',
     url='https://bitbucket.org/pytest-dev/pytest-curl-report',
     platforms=['linux', 'osx', 'unix', 'win32'],
     packages=['pytest_curl_report'],
