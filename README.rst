@@ -1,7 +1,5 @@
 .. image:: https://drone.io/bitbucket.org/pytest-dev/pytest-curl-report/status.png
    :target: https://drone.io/bitbucket.org/pytest-dev/pytest-curl-report/latest
-.. image:: https://pypip.in/v/pytest-curl-report/badge.png
-   :target: https://pypi.python.org/pypi/pytest-curl-report
 
 Requirements
 ------------
