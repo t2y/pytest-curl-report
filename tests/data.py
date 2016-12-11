@@ -55,7 +55,7 @@ GET_DATA = {
 POST_DATA_PARAMS = ('headers', 'data')
 POST_DATA = {
     'with no data': (
-        {'Content-Length': 0,
+        {'Content-Length': '0',
          'Content-Type': 'application/x-www-form-urlencoded'},
         '',
     ),
@@ -87,11 +87,6 @@ POST_DATA_MULTIPART = {
     'with multipart/form-data to send form data': (
         {'Content-Type': 'multipart/form-data'},
         {'data': (None, 'test'), 'num': (None, '1')},
-    ),
-
-    'with multipart/form-data to send multiple form data': (
-        {'Content-Type': 'multipart/form-data'},
-        {'data': (None, 'test1'), 'data': (None, 'test2')},
     ),
 
     'with multipart/form-data to send attachments':
@@ -143,7 +138,7 @@ PROXY_DATA = {
     'via proxy for get request': (
         'get',
         {'http': 'http://127.0.0.1:8888', 'https': 'https://127.0.0.1:8888'},
-        {'Content-Length': 0, 'X-Debug': 1},
+        {'Content-Length': '0', 'X-Debug': '1'},
         {},
     ),
 

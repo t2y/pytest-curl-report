@@ -118,12 +118,18 @@ def parse_multipart_data(data, content_type):
     formdata = parse_multipart(BytesIO(data), boundary)
 
     filenames = []
-    _filenames = re.findall(_RE_FILENAME, data)
-    if _filenames:
-        for name, raw_fname in _filenames:
-            fname, charset = decode_header(raw_fname)[0]
-            if charset is not None:
-                fname = fname.decode(charset)
-            filenames.append({'name': name, 'filename': fname})
+    # FIXME: data should be handled as byte strings to retrive filename
+    try:
+        decoded_data = data.decode('utf-8')
+    except:
+        pass  # cannot decode if data is binary file like an image
+    else:
+        _filenames = re.findall(_RE_FILENAME, decoded_data)
+        if _filenames:
+            for name, raw_fname in _filenames:
+                fname, charset = decode_header(raw_fname)[0]
+                if charset is not None:
+                    fname = fname.decode(charset)
+                filenames.append({'name': name, 'filename': fname})
 
     return formdata, filenames
